@@ -28,26 +28,21 @@ func NewConfig() *Config {
 	}
 
 	cfg := Config{}
-
-	runAddrFlag := flag.String("a", "", "Service address")
-	dbURIFlag := flag.String("d", "", "Database DSN")
-	accrualAddrFlag := flag.String("r", "", "Accrual system address")
-
-	flag.Parse()
-
-	if err := env.Parse(cfg); err != nil {
+	if err := env.Parse(&cfg); err != nil {
 		slog.Error("Failed to parse environment variables", "error", err)
 	}
 
-	if *runAddrFlag != "" {
-		cfg.RunAddress = *runAddrFlag
-	}
-	if *dbURIFlag != "" {
-		cfg.DatabaseURI = *dbURIFlag
-	}
-	if *accrualAddrFlag != "" {
-		cfg.AccrualSystemAddress = *accrualAddrFlag
-	}
+	flag.StringVar(&cfg.RunAddress, "a", cfg.RunAddress, "Service address")
+	flag.StringVar(&cfg.DatabaseURI, "d", cfg.DatabaseURI, "Database DSN")
+	flag.StringVar(&cfg.AccrualSystemAddress, "r", cfg.AccrualSystemAddress, "Accrual system address")
+
+	flag.Parse()
+
+	slog.Info("Config initialized",
+		"RunAddress", cfg.RunAddress,
+		"DatabaseURI", cfg.DatabaseURI,
+		"AccrualSystemAddress", cfg.AccrualSystemAddress,
+	)
 
 	return &cfg
 }
