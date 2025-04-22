@@ -53,8 +53,6 @@ func main() {
 	balanceService := service.NewBalanceService(balanceRepo)
 	balanceHandler := handler.NewBalanceHandler(balanceService)
 
-	authMiddleware := middleware.Auth(cfg.JWTKey)
-
 	var wg sync.WaitGroup
 	_, cancelDeleteCtx := context.WithCancel(context.Background())
 
@@ -63,12 +61,12 @@ func main() {
 	mux.Handle("POST /api/user/register", middleware.Log(http.HandlerFunc(authHandler.RegisterHandler)))
 	mux.Handle("POST /api/user/login", middleware.Log(http.HandlerFunc(authHandler.LoginHandler)))
 
-	mux.Handle("POST /api/user/orders", middleware.Log(authMiddleware(http.HandlerFunc(orderHandler.UploadOrder))))
-	mux.Handle("GET /api/user/orders", middleware.Log(authMiddleware(http.HandlerFunc(orderHandler.GetOrders))))
+	mux.Handle("POST /api/user/orders", middleware.Log((http.HandlerFunc(orderHandler.UploadOrder))))
+	mux.Handle("GET /api/user/orders", middleware.Log((http.HandlerFunc(orderHandler.GetOrders))))
 
-	mux.Handle("GET /api/user/balance", middleware.Log(authMiddleware(http.HandlerFunc(balanceHandler.GetUserBalance))))
-	mux.Handle("POST /api/user/balance/withdraw", middleware.Log(authMiddleware(http.HandlerFunc(balanceHandler.WithdrawBalance))))
-	mux.Handle("GET /api/user/withdraws", middleware.Log(authMiddleware(http.HandlerFunc(balanceHandler.GetUserWithdrawals))))
+	mux.Handle("GET /api/user/balance", middleware.Log((http.HandlerFunc(balanceHandler.GetUserBalance))))
+	mux.Handle("POST /api/user/balance/withdraw", middleware.Log((http.HandlerFunc(balanceHandler.WithdrawBalance))))
+	mux.Handle("GET /api/user/withdraws", middleware.Log((http.HandlerFunc(balanceHandler.GetUserWithdrawals))))
 
 	server := &http.Server{
 		Addr:     cfg.RunAddress,
