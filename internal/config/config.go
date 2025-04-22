@@ -17,7 +17,7 @@ type Config struct {
 	MigrationsPath       string `env:"MIGRATIONS_PATH"       envDefault:"migrations"`
 	LogFilePath          string `env:"LOG_FILE_PATH"         envDefault:"logfile.log"`
 	JWTKey               string `env:"JWT_KEY"               envDefault:"supermegasecret"`
-	DatabaseURI          string `env:"POSTGRES_CONN"         envDefault:"postgres://gophermart:gophermart@localhost:5432/gophermart?sslmode=disable"`
+	DatabaseURI          string `env:"DATABASE_URI"         envDefault:"postgres://gophermart:gophermart@localhost:5432/gophermart?sslmode=disable"`
 	AccrualSystemAddress string `env:"ACCRUAL_SYSTEM_ADDRESS" envDefault:"http://localhost:8081"`
 }
 
@@ -28,21 +28,25 @@ func NewConfig() *Config {
 	}
 
 	cfg := Config{}
+
+	runAddrFlag := flag.String("a", "", "Service address")
+	dbURIFlag := flag.String("d", "", "Database DSN")
+	accrualAddrFlag := flag.String("r", "", "Accrual system address")
+	flag.Parse()
+
 	if err := env.Parse(&cfg); err != nil {
 		slog.Error("Failed to parse environment variables", "error", err)
 	}
 
-	flag.StringVar(&cfg.RunAddress, "a", cfg.RunAddress, "Service address")
-	flag.StringVar(&cfg.DatabaseURI, "d", cfg.DatabaseURI, "Database DSN")
-	flag.StringVar(&cfg.AccrualSystemAddress, "r", cfg.AccrualSystemAddress, "Accrual system address")
-
-	flag.Parse()
-
-	slog.Info("Config initialized",
-		"RunAddress", cfg.RunAddress,
-		"DatabaseURI", cfg.DatabaseURI,
-		"AccrualSystemAddress", cfg.AccrualSystemAddress,
-	)
+	if *runAddrFlag != "" {
+		cfg.RunAddress = *runAddrFlag
+	}
+	if *dbURIFlag != "" {
+		cfg.DatabaseURI = *dbURIFlag
+	}
+	if *accrualAddrFlag != "" {
+		cfg.AccrualSystemAddress = *accrualAddrFlag
+	}
 
 	return &cfg
 }
