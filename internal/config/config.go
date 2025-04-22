@@ -30,17 +30,24 @@ func NewConfig() *Config {
 
 	cfg := Config{}
 
-	if err := env.Parse(&cfg); err != nil {
-		log.Fatalf("Error parsing environment variables: %v", err)
-	}
+	runAddrFlag := flag.String("a", "", "Service address")
+	dbURIFlag := flag.String("d", "", "Database DSN")
+	accrualAddrFlag := flag.String("r", "", "Accrual system address")
 
-	flag.StringVar(&cfg.RunAddress, "a", "", "Service address")
-	flag.StringVar(&cfg.DatabaseURI, "d", "", "Database DSN")
-	flag.StringVar(&cfg.AccrualSystemAddress, "r", "", "Accrual system address")
 	flag.Parse()
 
 	if err := env.Parse(cfg); err != nil {
 		slog.Error("Failed to parse environment variables", "error", err)
+	}
+
+	if *runAddrFlag != "" {
+		cfg.RunAddress = *runAddrFlag
+	}
+	if *dbURIFlag != "" {
+		cfg.DatabaseURI = *dbURIFlag
+	}
+	if *accrualAddrFlag != "" {
+		cfg.AccrualSystemAddress = *accrualAddrFlag
 	}
 
 	return &cfg
