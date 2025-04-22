@@ -1,0 +1,65 @@
+package repository
+
+import (
+	"context"
+	"errors"
+	"fmt"
+
+	"github.com/Te8va/Gofermarch/internal/domain"
+	appErrors "github.com/Te8va/Gofermarch/internal/errors"
+	"github.com/Te8va/Gofermarch/pkg/logger"
+	"github.com/jackc/pgerrcode"
+	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgconn"
+	"github.com/jackc/pgx/v5/pgxpool"
+)
+
+type AuthorizationRepository struct {
+	pool *pgxpool.Pool
+}
+
+func NewAuthorizationRepository(pool *pgxpool.Pool) *AuthorizationRepository {
+	return &AuthorizationRepository{pool: pool}
+}
+
+func (r *AuthorizationRepository) CreateUser(ctx context.Context, user domain.User) error {
+	tx, err := r.pool.Begin(ctx)
+	if err != nil {
+		return fmt.Errorf("repository.CreateUser: failed to begin transaction: %w", err)
+	}
+	defer func() {
+		if err := tx.Rollback(ctx); err != nil && !errors.Is(err, pgx.ErrTxClosed) {
+			logger.Logger().Errorln("CreateUser: failed to rollback transaction:", err)
+		}
+	}()
+
+	_, err = tx.Exec(ctx, "INSERT INTO users(login, password, token) VALUES($1, $2, $3)", user.Login, user.Password, user.Token)
+	if err != nil {
+		var pgErr *pgconn.PgError
+		if errors.As(err, &pgErr) && pgErr.Code == pgerrcode.UniqueViolation {
+			return appErrors.ErrAlreadyRegistered
+		}
+		return fmt.Errorf("repository.CreateUser: %w", err)
+	}
+
+	if err := tx.Commit(ctx); err != nil {
+		return fmt.Errorf("repository.CreateUser: failed to commit transaction: %w", err)
+	}
+
+	return nil
+}
+
+func (r *AuthorizationRepository) GetUserByLogin(ctx context.Context, login string) (*domain.User, error) {
+	var user domain.User
+
+	err := r.pool.QueryRow(ctx, "SELECT login, password, token FROM users WHERE login = $1", login).
+		Scan(&user.Login, &user.Password, &user.Token)
+	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return nil, appErrors.ErrUserNotFound
+		}
+		return nil, fmt.Errorf("repository.GetUserByLogin: %w", err)
+	}
+
+	return &user, nil
+}
