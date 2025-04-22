@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"net/http"
@@ -11,12 +12,17 @@ import (
 	"go.uber.org/zap"
 )
 
-type AuthorizationHandler struct {
-	srv       domain.AuthorizationService
+type Authorization interface {
+	Register(ctx context.Context, login, password string) (string, error)
+	Authenticate(ctx context.Context, login, password string) (string, error)
 }
 
-func NewAuthorizationHandler(srv domain.AuthorizationService) *AuthorizationHandler {
-	return &AuthorizationHandler{srv: srv,}
+type AuthorizationHandler struct {
+	aut Authorization
+}
+
+func NewAuthorizationHandler(aut Authorization) *AuthorizationHandler {
+	return &AuthorizationHandler{aut: aut}
 }
 
 func (h *AuthorizationHandler) RegisterHandler(w http.ResponseWriter, r *http.Request) {
@@ -32,7 +38,7 @@ func (h *AuthorizationHandler) RegisterHandler(w http.ResponseWriter, r *http.Re
 		return
 	}
 
-	token, err := h.srv.Register(r.Context(), authData.Login, authData.Password)
+	token, err := h.aut.Register(r.Context(), authData.Login, authData.Password)
 	if err != nil {
 		switch {
 		case errors.Is(err, appErrors.ErrAlreadyRegistered):
@@ -56,7 +62,7 @@ func (h *AuthorizationHandler) LoginHandler(w http.ResponseWriter, r *http.Reque
 		return
 	}
 
-	token, err := h.srv.Authenticate(r.Context(), authData.Login, authData.Password)
+	token, err := h.aut.Authenticate(r.Context(), authData.Login, authData.Password)
 	if err != nil {
 		switch {
 		case errors.Is(err, appErrors.ErrWrongPassword),

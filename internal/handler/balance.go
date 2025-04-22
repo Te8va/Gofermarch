@@ -12,18 +12,18 @@ import (
 	"github.com/Te8va/Gofermarch/internal/utils"
 )
 
-type BalanceService interface {
+type Balance interface {
 	GetUserBalance(ctx context.Context, login string) (domain.Balance, error)
 	WithdrawBalance(ctx context.Context, login, order string, sum float64) error
 	GetUserWithdrawals(ctx context.Context, login string) ([]domain.Withdrawal, error)
 }
 
 type BalanceHandler struct {
-	service BalanceService
+	bal Balance
 }
 
-func NewBalanceHandler(service BalanceService) *BalanceHandler {
-	return &BalanceHandler{service: service}
+func NewBalanceHandler(bal Balance) *BalanceHandler {
+	return &BalanceHandler{bal: bal}
 }
 
 func (h *BalanceHandler) GetUserBalance(w http.ResponseWriter, r *http.Request) {
@@ -33,7 +33,7 @@ func (h *BalanceHandler) GetUserBalance(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
-	balance, err := h.service.GetUserBalance(r.Context(), login)
+	balance, err := h.bal.GetUserBalance(r.Context(), login)
 	if err != nil {
 		http.Error(w, "Internal server error", http.StatusInternalServerError)
 		return
@@ -74,7 +74,7 @@ func (h *BalanceHandler) WithdrawBalance(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	err := h.service.WithdrawBalance(r.Context(), login, req.Order, req.Sum)
+	err := h.bal.WithdrawBalance(r.Context(), login, req.Order, req.Sum)
 	if err != nil {
 		switch {
 		case errors.Is(err, appErrors.ErrInsufficientFunds):
@@ -97,7 +97,7 @@ func (h *BalanceHandler) GetUserWithdrawals(w http.ResponseWriter, r *http.Reque
 		return
 	}
 
-	withdrawals, err := h.service.GetUserWithdrawals(r.Context(), login)
+	withdrawals, err := h.bal.GetUserWithdrawals(r.Context(), login)
 	if err != nil {
 		http.Error(w, "Internal server error", http.StatusInternalServerError)
 		return

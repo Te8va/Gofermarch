@@ -68,7 +68,7 @@ func main() {
 
 	mux.Handle("GET /api/user/balance", middleware.Log(authMiddleware(http.HandlerFunc(balanceHandler.GetUserBalance))))
 	mux.Handle("POST /api/user/balance/withdraw", middleware.Log(authMiddleware(http.HandlerFunc(balanceHandler.WithdrawBalance))))
-	mux.Handle("GET /api/user/withdrawls", middleware.Log(authMiddleware(http.HandlerFunc(balanceHandler.GetUserWithdrawals))))
+	mux.Handle("GET /api/user/withdrawals", middleware.Log(authMiddleware(http.HandlerFunc(balanceHandler.GetUserWithdrawals))))
 
 	server := &http.Server{
 		Addr:     cfg.RunAddress,

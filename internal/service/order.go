@@ -14,7 +14,7 @@ import (
 	appErrors "github.com/Te8va/Gofermarch/internal/errors"
 )
 
-type OrderRepository interface {
+type OrderServ interface {
 	GetOrder(ctx context.Context, number string) (domain.Order, error)
 	SaveOrder(ctx context.Context, order domain.Order) error
 	GetOrdersByUser(ctx context.Context, login string) ([]domain.Order, error)
@@ -22,19 +22,19 @@ type OrderRepository interface {
 }
 
 type OrderService struct {
-	repo              OrderRepository
+	srv              OrderServ
 	accrualSystemURL  string
 }
 
-func NewOrderService(repo OrderRepository, accrualSystemURL string) *OrderService {
+func NewOrderService(srv OrderServ, accrualSystemURL string) *OrderService {
 	return &OrderService{
-		repo:             repo,
+		srv:             srv,
 		accrualSystemURL: accrualSystemURL,
 	}
 }
 
 func (s *OrderService) ProcessOrder(ctx context.Context, number, login string) (domain.OrderStatus, error) {
-	order, err := s.repo.GetOrder(ctx, number)
+	order, err := s.srv.GetOrder(ctx, number)
 	if err == nil {
 		if order.Login == login {
 			return domain.StatusAlreadyUploaded, errors.New("order already uploaded by the same user")
@@ -42,7 +42,7 @@ func (s *OrderService) ProcessOrder(ctx context.Context, number, login string) (
 		return domain.StatusConflict, appErrors.ErrOrderExists
 	}
 
-	err = s.repo.SaveOrder(ctx, domain.Order{
+	err = s.srv.SaveOrder(ctx, domain.Order{
 		Number:     number,
 		Login:      login,
 		UploadedAt: time.Now(),
@@ -92,7 +92,7 @@ func (s *OrderService) updateOrderFromAccrualSystem(ctx context.Context, number 
 			internalStatus = "NEW"
 		}
 
-		return s.repo.UpdateOrder(ctx, number, internalStatus, ext.Accrual)
+		return s.srv.UpdateOrder(ctx, number, internalStatus, ext.Accrual)
 
 	case http.StatusTooManyRequests:
 		return appErrors.ErrTooManyRequests
@@ -101,5 +101,5 @@ func (s *OrderService) updateOrderFromAccrualSystem(ctx context.Context, number 
 }
 
 func (s *OrderService) GetOrdersByUser(ctx context.Context, login string) ([]domain.Order, error) {
-	return s.repo.GetOrdersByUser(ctx, login)
+	return s.srv.GetOrdersByUser(ctx, login)
 }
