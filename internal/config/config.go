@@ -2,7 +2,6 @@ package config
 
 import (
 	"flag"
-	"log"
 	"log/slog"
 
 	"github.com/caarlos0/env/v6"
