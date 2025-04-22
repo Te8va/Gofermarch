@@ -1,8 +1,23 @@
-# Log files
-*.log
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
 
-# .env file
-.env
+# Test binary, built with `go test -c`
+*.test
 
-# Temp log file
-abc_tmp.txt
+# Output of the go coverage tool, specifically when used with LiteIDE
+*.out
+
+# Binaries
+cmd/gophermart/main
+cmd/gophermart/gophermart
+
+# Dependency directories (remove the comment below to include it)
+vendor/
+
+# IDEs directories
+.idea
+.vscode

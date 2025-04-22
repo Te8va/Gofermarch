@@ -1,0 +1,52 @@
+{"level":"fatal","ts":1745268611.30953,"caller":"gophermart/main.go:28","msg":"{error 26 0  failed to open database: dial tcp: lookup gophermart-db: no such host}","stacktrace":"main.main\n\tC:/Users/Jane/practicum/gofer/cmd/gophermart/main.go:28\nruntime.main\n\tC:/Users/Jane/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.8.windows-amd64/src/runtime/proc.go:272"}
+{"level":"fatal","ts":1745268853.7261984,"caller":"gophermart/main.go:28","msg":"{error 26 0  failed to open database: dial tcp: lookup gophermart-db: no such host}","stacktrace":"main.main\n\tC:/Users/Jane/practicum/gofer/cmd/gophermart/main.go:28\nruntime.main\n\tC:/Users/Jane/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.8.windows-amd64/src/runtime/proc.go:272"}
+{"level":"info","ts":1745269603.303182,"caller":"gophermart/main.go:35","msg":"Migrations applied successfully"}
+{"level":"info","ts":1745269603.4709249,"caller":"gophermart/main.go:42","msg":"Postgres connection pool created"}
+{"level":"info","ts":1745269603.4719214,"caller":"gophermart/main.go:74","msg":"Server started, listening on port localhost:8080"}
+{"level":"info","ts":1745269616.709411,"caller":"middleware/log.go:34","msg":"Request HTTP method: POST, request route: /api/user/register, length of content in request: 56"}
+{"level":"info","ts":1745269617.0979693,"caller":"middleware/log.go:42","msg":"Response status for POST /api/user/register: 200, length of content in response: 0, processing duration: 388.5588ms"}
+{"level":"info","ts":1745269619.6641777,"caller":"middleware/log.go:34","msg":"Request HTTP method: POST, request route: /api/user/register, length of content in request: 56"}
+{"level":"info","ts":1745269619.6674428,"caller":"middleware/log.go:42","msg":"Response status for POST /api/user/register: 409, length of content in response: 20, processing duration: 2.6716ms"}
+{"level":"info","ts":1745269625.829359,"caller":"middleware/log.go:34","msg":"Request HTTP method: POST, request route: /api/user/orders, length of content in request: 11"}
+{"level":"info","ts":1745269625.9149644,"caller":"middleware/log.go:42","msg":"Response status for POST /api/user/orders: 202, length of content in response: 0, processing duration: 85.0136ms"}
+{"level":"info","ts":1745269638.0339375,"caller":"middleware/log.go:34","msg":"Request HTTP method: POST, request route: /api/user/orders, length of content in request: 11"}
+{"level":"info","ts":1745269638.0389066,"caller":"middleware/log.go:42","msg":"Response status for POST /api/user/orders: 200, length of content in response: 0, processing duration: 4.0692ms"}
+{"level":"info","ts":1745269640.4196985,"caller":"middleware/log.go:34","msg":"Request HTTP method: POST, request route: /api/user/orders, length of content in request: 11"}
+{"level":"info","ts":1745269640.4243755,"caller":"middleware/log.go:42","msg":"Response status for POST /api/user/orders: 200, length of content in response: 0, processing duration: 3.0261ms"}
+{"level":"info","ts":1745269651.3659718,"caller":"middleware/log.go:34","msg":"Request HTTP method: GET, request route: /api/user/orders, length of content in request: 0"}
+{"level":"info","ts":1745269651.3797023,"caller":"middleware/log.go:42","msg":"Response status for GET /api/user/orders: 200, length of content in response: 84, processing duration: 13.2072ms"}
+{"level":"info","ts":1745269653.7656367,"caller":"middleware/log.go:34","msg":"Request HTTP method: GET, request route: /api/user/orders, length of content in request: 0"}
+{"level":"info","ts":1745269653.7683704,"caller":"middleware/log.go:42","msg":"Response status for GET /api/user/orders: 200, length of content in response: 84, processing duration: 2.0675ms"}
+{"level":"info","ts":1745269667.083997,"caller":"middleware/log.go:34","msg":"Request HTTP method: GET, request route: /api/user/balance, length of content in request: 0"}
+{"level":"info","ts":1745269667.1057065,"caller":"middleware/log.go:42","msg":"Response status for GET /api/user/balance: 500, length of content in response: 22, processing duration: 20.3425ms"}
+{"level":"info","ts":1745269669.7647004,"caller":"middleware/log.go:34","msg":"Request HTTP method: GET, request route: /api/user/balance, length of content in request: 0"}
+{"level":"info","ts":1745269669.776302,"caller":"middleware/log.go:42","msg":"Response status for GET /api/user/balance: 500, length of content in response: 22, processing duration: 11.0661ms"}
+{"level":"info","ts":1745269677.5753324,"caller":"middleware/log.go:34","msg":"Request HTTP method: POST, request route: /api/user/balance/withdraw, length of content in request: 48"}
+{"level":"info","ts":1745269677.5801685,"caller":"middleware/log.go:42","msg":"Response status for POST /api/user/balance/withdraw: 500, length of content in response: 22, processing duration: 4.2462ms"}
+{"level":"info","ts":1745269683.3400533,"caller":"middleware/log.go:34","msg":"Request HTTP method: GET, request route: /api/user/orders, length of content in request: 0"}
+{"level":"info","ts":1745269683.343737,"caller":"middleware/log.go:42","msg":"Response status for GET /api/user/orders: 200, length of content in response: 84, processing duration: 2.3584ms"}
+{"level":"info","ts":1745269701.086269,"caller":"middleware/log.go:34","msg":"Request HTTP method: GET, request route: /api/user/balance, length of content in request: 0"}
+{"level":"info","ts":1745269701.090799,"caller":"middleware/log.go:42","msg":"Response status for GET /api/user/balance: 500, length of content in response: 22, processing duration: 3.9506ms"}
+{"level":"info","ts":1745269725.2894168,"caller":"gophermart/main.go:84","msg":"Shutting down server..."}
+{"level":"info","ts":1745269725.297147,"caller":"gophermart/main.go:101","msg":"All delete goroutines successfully finished"}
+{"level":"info","ts":1745269725.2976644,"caller":"gophermart/main.go:107","msg":"Server was shut down"}
+{"level":"info","ts":1745270464.8030097,"caller":"gophermart/main.go:35","msg":"Migrations applied successfully"}
+{"level":"info","ts":1745270465.04682,"caller":"gophermart/main.go:42","msg":"Postgres connection pool created"}
+{"level":"info","ts":1745270465.04682,"caller":"gophermart/main.go:74","msg":"Server started, listening on port localhost:8080"}
+{"level":"info","ts":1745270471.674995,"caller":"middleware/log.go:34","msg":"Request HTTP method: GET, request route: /api/user/balance, length of content in request: 0"}
+{"level":"info","ts":1745270471.7055895,"caller":"middleware/log.go:42","msg":"Response status for GET /api/user/balance: 200, length of content in response: 28, processing duration: 29.8772ms"}
+{"level":"info","ts":1745270482.7901957,"caller":"middleware/log.go:34","msg":"Request HTTP method: POST, request route: /api/user/balance/withdraw, length of content in request: 48"}
+{"level":"info","ts":1745270482.7954936,"caller":"middleware/log.go:42","msg":"Response status for POST /api/user/balance/withdraw: 402, length of content in response: 19, processing duration: 4.1871ms"}
+{"level":"info","ts":1745270491.4329762,"caller":"middleware/log.go:34","msg":"Request HTTP method: POST, request route: /api/user/balance/withdraw, length of content in request: 47"}
+{"level":"info","ts":1745270491.5163374,"caller":"middleware/log.go:42","msg":"Response status for POST /api/user/balance/withdraw: 500, length of content in response: 22, processing duration: 82.2506ms"}
+{"level":"info","ts":1745270503.2503433,"caller":"middleware/log.go:34","msg":"Request HTTP method: POST, request route: /api/user/balance/withdraw, length of content in request: 49"}
+{"level":"info","ts":1745270503.2573812,"caller":"middleware/log.go:42","msg":"Response status for POST /api/user/balance/withdraw: 500, length of content in response: 22, processing duration: 5.4463ms"}
+{"level":"info","ts":1745270510.2537417,"caller":"middleware/log.go:34","msg":"Request HTTP method: POST, request route: /api/user/balance/withdraw, length of content in request: 48"}
+{"level":"info","ts":1745270510.259166,"caller":"middleware/log.go:42","msg":"Response status for POST /api/user/balance/withdraw: 402, length of content in response: 19, processing duration: 4.3676ms"}
+{"level":"info","ts":1745270515.9758224,"caller":"middleware/log.go:34","msg":"Request HTTP method: GET, request route: /api/user/withdraws, length of content in request: 0"}
+{"level":"info","ts":1745270515.993255,"caller":"middleware/log.go:42","msg":"Response status for GET /api/user/withdraws: 204, length of content in response: 0, processing duration: 16.8576ms"}
+{"level":"info","ts":1745270520.2705705,"caller":"middleware/log.go:34","msg":"Request HTTP method: GET, request route: /api/user/withdraws, length of content in request: 0"}
+{"level":"info","ts":1745270520.274192,"caller":"middleware/log.go:42","msg":"Response status for GET /api/user/withdraws: 204, length of content in response: 0, processing duration: 2.5261ms"}
+{"level":"info","ts":1745270531.5522397,"caller":"gophermart/main.go:84","msg":"Shutting down server..."}
+{"level":"info","ts":1745270531.5529623,"caller":"gophermart/main.go:101","msg":"All delete goroutines successfully finished"}
+{"level":"info","ts":1745270531.553725,"caller":"gophermart/main.go:107","msg":"Server was shut down"}
