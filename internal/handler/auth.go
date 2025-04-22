@@ -12,11 +12,11 @@ import (
 )
 
 type AuthorizationHandler struct {
-	srv domain.AuthorizationService
+	srv       domain.AuthorizationService
 }
 
 func NewAuthorizationHandler(srv domain.AuthorizationService) *AuthorizationHandler {
-	return &AuthorizationHandler{srv: srv}
+	return &AuthorizationHandler{srv: srv,}
 }
 
 func (h *AuthorizationHandler) RegisterHandler(w http.ResponseWriter, r *http.Request) {
@@ -44,14 +44,7 @@ func (h *AuthorizationHandler) RegisterHandler(w http.ResponseWriter, r *http.Re
 		return
 	}
 
-	http.SetCookie(w, &http.Cookie{
-		Name:     "auth_token",
-		Value:    token,
-		Path:     "/",
-		HttpOnly: true,
-		Secure:   true,
-	})
-
+	h.setAuthToken(w, token)
 	w.WriteHeader(http.StatusOK)
 }
 
@@ -76,6 +69,11 @@ func (h *AuthorizationHandler) LoginHandler(w http.ResponseWriter, r *http.Reque
 		return
 	}
 
+	h.setAuthToken(w, token)
+	w.WriteHeader(http.StatusOK)
+}
+
+func (h *AuthorizationHandler) setAuthToken(w http.ResponseWriter, token string) {
 	http.SetCookie(w, &http.Cookie{
 		Name:     "auth_token",
 		Value:    token,
@@ -84,5 +82,5 @@ func (h *AuthorizationHandler) LoginHandler(w http.ResponseWriter, r *http.Reque
 		Secure:   true,
 	})
 
-	w.WriteHeader(http.StatusOK)
+	w.Header().Set("Authorization", "Bearer "+token)
 }
