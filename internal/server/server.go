@@ -63,7 +63,6 @@ func Serve() error {
 	}
 
 	var wg sync.WaitGroup
-	ctx, cancelDeleteCtx := context.WithCancel(context.Background())
 
 	go func() {
 		logger.Logger().Infoln("Server started, listening on port", cfg.RunAddress)
@@ -95,7 +94,6 @@ func Serve() error {
 	case <-waitGroupChan:
 		logger.Logger().Infoln("All delete goroutines successfully finished")
 	case <-time.After(time.Second * 3):
-		cancelDeleteCtx()
 		logger.Logger().Infoln("Some of delete goroutines have not completed their job due to shutdown timeout")
 	}
 
