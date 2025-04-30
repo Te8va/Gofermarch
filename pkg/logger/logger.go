@@ -24,7 +24,6 @@ func Logger() *logger {
 	log.once.Do(func() {
 		cfg := zap.NewProductionConfig()
 		cfg.OutputPaths = []string{log.logFile, "stdout"}
-		// cfg.Level.SetLevel(zap.WarnLevel) для нагрузочного тестирования
 
 		var logger *zap.Logger
 		logger, err = cfg.Build()

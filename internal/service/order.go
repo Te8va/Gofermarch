@@ -14,6 +14,8 @@ import (
 	appErrors "github.com/Te8va/Gofermarch/internal/errors"
 )
 
+//go:generate mockgen -source=order.go -destination=mocks/mock_order.go -package=mocks
+
 type OrderServ interface {
 	GetOrder(ctx context.Context, number string) (domain.Order, error)
 	SaveOrder(ctx context.Context, order domain.Order) error

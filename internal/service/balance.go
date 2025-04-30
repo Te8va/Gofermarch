@@ -8,6 +8,8 @@ import (
 	appErrors "github.com/Te8va/Gofermarch/internal/errors"
 )
 
+//go:generate mockgen -source=balance.go -destination=mocks/mock_balance.go -package=mocks
+
 type BalanceServ interface {
 	GetBalance(ctx context.Context, login string) (domain.Balance, error)
 	SaveWithdrawal(ctx context.Context, w domain.Withdrawal) error

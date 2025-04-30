@@ -4,6 +4,7 @@ import (
 	"flag"
 	"log/slog"
 
+	"github.com/Te8va/Gofermarch/pkg/logger"
 	"github.com/caarlos0/env/v6"
 	"github.com/joho/godotenv"
 )
@@ -35,7 +36,7 @@ func NewConfig() *Config {
 	flag.Parse()
 
 	if err := env.Parse(&cfg); err != nil {
-		slog.Error("Failed to parse environment variables", "error", err)
+		logger.Logger().Error("Failed to parse environment variables", "error", err)
 	}
 
 	if *runAddrFlag != "" {

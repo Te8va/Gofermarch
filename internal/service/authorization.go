@@ -12,6 +12,8 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+//go:generate mockgen -source=authorization.go -destination=mocks/mock_authorization.go -package=mocks
+
 type AuthorizationServ interface {
 	CreateUser(ctx context.Context, user domain.User) error
 	GetUserByLogin(ctx context.Context, login string) (*domain.User, error)
