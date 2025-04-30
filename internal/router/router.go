@@ -7,7 +7,7 @@ import (
 	"github.com/Te8va/Gofermarch/internal/middleware"
 )
 
-func NewRouter( authHandler *handler.AuthorizationHandler, orderHandler *handler.OrderHandler, balanceHandler *handler.BalanceHandler, authMiddleware func(http.Handler) http.Handler) http.Handler {
+func NewRouter(authHandler *handler.AuthorizationHandler, orderHandler *handler.OrderHandler, balanceHandler *handler.BalanceHandler, authMiddleware func(http.Handler) http.Handler) http.Handler {
 	mux := http.NewServeMux()
 
 	mux.Handle("POST /api/user/register", middleware.Log(http.HandlerFunc(authHandler.RegisterHandler)))

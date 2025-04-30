@@ -3,8 +3,9 @@ package repository
 import (
 	"context"
 
-	"github.com/Te8va/Gofermarch/internal/domain"
 	"github.com/jackc/pgx/v5/pgxpool"
+
+	"github.com/Te8va/Gofermarch/internal/domain"
 )
 
 type OrderRepository struct {

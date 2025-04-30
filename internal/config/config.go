@@ -4,9 +4,10 @@ import (
 	"flag"
 	"log/slog"
 
-	"github.com/Te8va/Gofermarch/pkg/logger"
 	"github.com/caarlos0/env/v6"
 	"github.com/joho/godotenv"
+
+	"github.com/Te8va/Gofermarch/pkg/logger"
 )
 
 type Config struct {

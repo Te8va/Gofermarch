@@ -5,10 +5,11 @@ import (
 	"net/http"
 	"strings"
 
+	"go.uber.org/zap"
+
 	"github.com/Te8va/Gofermarch/internal/domain"
 	"github.com/Te8va/Gofermarch/pkg/jwt"
 	"github.com/Te8va/Gofermarch/pkg/logger"
-	"go.uber.org/zap"
 )
 
 func Auth(jwtKey string) func(http.Handler) http.Handler {

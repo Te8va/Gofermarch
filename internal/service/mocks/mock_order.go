@@ -8,8 +8,9 @@ import (
 	context "context"
 	reflect "reflect"
 
-	domain "github.com/Te8va/Gofermarch/internal/domain"
 	gomock "github.com/golang/mock/gomock"
+
+	domain "github.com/Te8va/Gofermarch/internal/domain"
 )
 
 // MockOrderServ is a mock of OrderServ interface.

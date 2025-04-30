@@ -5,11 +5,12 @@ import (
 	"errors"
 	"testing"
 
+	"github.com/golang/mock/gomock"
+	"github.com/stretchr/testify/require"
+
 	"github.com/Te8va/Gofermarch/internal/domain"
 	appErrors "github.com/Te8va/Gofermarch/internal/errors"
 	"github.com/Te8va/Gofermarch/internal/service/mocks"
-	"github.com/golang/mock/gomock"
-	"github.com/stretchr/testify/require"
 )
 
 func TestOrderService_ProcessOrder(t *testing.T) {

@@ -6,10 +6,11 @@ import (
 	"fmt"
 	"time"
 
+	"golang.org/x/crypto/bcrypt"
+
 	"github.com/Te8va/Gofermarch/internal/domain"
 	appErrors "github.com/Te8va/Gofermarch/internal/errors"
 	"github.com/Te8va/Gofermarch/pkg/jwt"
-	"golang.org/x/crypto/bcrypt"
 )
 
 //go:generate mockgen -source=authorization.go -destination=mocks/mock_authorization.go -package=mocks
@@ -20,7 +21,7 @@ type AuthorizationServ interface {
 }
 
 type Authorization struct {
-	srv   AuthorizationServ
+	srv    AuthorizationServ
 	JWTKey string
 }
 

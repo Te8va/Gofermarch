@@ -10,6 +10,9 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/golang-migrate/migrate/v4"
+	"go.uber.org/zap"
+
 	"github.com/Te8va/Gofermarch/internal/config"
 	"github.com/Te8va/Gofermarch/internal/handler"
 	"github.com/Te8va/Gofermarch/internal/middleware"
@@ -17,8 +20,6 @@ import (
 	"github.com/Te8va/Gofermarch/internal/router"
 	"github.com/Te8va/Gofermarch/internal/service"
 	"github.com/Te8va/Gofermarch/pkg/logger"
-	"github.com/golang-migrate/migrate/v4"
-	"go.uber.org/zap"
 )
 
 func Serve() error {
@@ -62,7 +63,7 @@ func Serve() error {
 	}
 
 	var wg sync.WaitGroup
-	_, cancelDeleteCtx := context.WithCancel(context.Background())
+	ctx, cancelDeleteCtx := context.WithCancel(context.Background())
 
 	go func() {
 		logger.Logger().Infoln("Server started, listening on port", cfg.RunAddress)

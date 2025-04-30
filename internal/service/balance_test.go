@@ -6,11 +6,12 @@ import (
 	"testing"
 	"time"
 
+	"github.com/golang/mock/gomock"
+	"github.com/stretchr/testify/require"
+
 	"github.com/Te8va/Gofermarch/internal/domain"
 	appErrors "github.com/Te8va/Gofermarch/internal/errors"
 	"github.com/Te8va/Gofermarch/internal/service/mocks"
-	"github.com/golang/mock/gomock"
-	"github.com/stretchr/testify/require"
 )
 
 func TestBalanceService_GetUserBalance(t *testing.T) {
@@ -24,10 +25,10 @@ func TestBalanceService_GetUserBalance(t *testing.T) {
 	login := "user1"
 
 	testCases := []struct {
-		name          string
-		mockSetup     func()
+		name            string
+		mockSetup       func()
 		expectedBalance domain.Balance
-		expectedError error
+		expectedError   error
 	}{
 		{
 			name: "successful balance fetch",

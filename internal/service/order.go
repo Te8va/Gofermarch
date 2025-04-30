@@ -25,12 +25,12 @@ type OrderServ interface {
 
 type OrderService struct {
 	srv              OrderServ
-	accrualSystemURL  string
+	accrualSystemURL string
 }
 
 func NewOrderService(srv OrderServ, accrualSystemURL string) *OrderService {
 	return &OrderService{
-		srv:             srv,
+		srv:              srv,
 		accrualSystemURL: accrualSystemURL,
 	}
 }

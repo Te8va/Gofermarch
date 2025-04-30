@@ -6,10 +6,11 @@ import (
 	"errors"
 	"net/http"
 
+	"go.uber.org/zap"
+
 	"github.com/Te8va/Gofermarch/internal/domain"
 	appErrors "github.com/Te8va/Gofermarch/internal/errors"
 	"github.com/Te8va/Gofermarch/pkg/logger"
-	"go.uber.org/zap"
 )
 
 type Authorization interface {

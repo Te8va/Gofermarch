@@ -5,12 +5,13 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/Te8va/Gofermarch/internal/domain"
-	appErrors "github.com/Te8va/Gofermarch/internal/errors"
-	"github.com/Te8va/Gofermarch/internal/service/mocks"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/require"
 	"golang.org/x/crypto/bcrypt"
+
+	"github.com/Te8va/Gofermarch/internal/domain"
+	appErrors "github.com/Te8va/Gofermarch/internal/errors"
+	"github.com/Te8va/Gofermarch/internal/service/mocks"
 )
 
 func TestAuthorization_Register(t *testing.T) {
@@ -25,10 +26,10 @@ func TestAuthorization_Register(t *testing.T) {
 	password := "password123"
 
 	testCases := []struct {
-		name       string
-		mockSetup  func()
+		name          string
+		mockSetup     func()
 		expectedToken string
-		expectedError  error
+		expectedError error
 	}{
 		{
 			name: "successful register",

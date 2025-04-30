@@ -5,13 +5,14 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/Te8va/Gofermarch/internal/domain"
-	appErrors "github.com/Te8va/Gofermarch/internal/errors"
-	"github.com/Te8va/Gofermarch/pkg/logger"
 	"github.com/jackc/pgerrcode"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgconn"
 	"github.com/jackc/pgx/v5/pgxpool"
+
+	"github.com/Te8va/Gofermarch/internal/domain"
+	appErrors "github.com/Te8va/Gofermarch/internal/errors"
+	"github.com/Te8va/Gofermarch/pkg/logger"
 )
 
 type AuthorizationRepository struct {

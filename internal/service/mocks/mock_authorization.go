@@ -8,8 +8,9 @@ import (
 	context "context"
 	reflect "reflect"
 
-	domain "github.com/Te8va/Gofermarch/internal/domain"
 	gomock "github.com/golang/mock/gomock"
+
+	domain "github.com/Te8va/Gofermarch/internal/domain"
 )
 
 // MockAuthorizationServ is a mock of AuthorizationServ interface.
