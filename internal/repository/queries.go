@@ -27,7 +27,7 @@ const (
 		ORDER BY processed_at DESC
 	`
 
-// Authorization queries
+	// Authorization queries
 	queryInsertUser = `
 		INSERT INTO users(login, password, token)
 		VALUES($1, $2, $3)
@@ -39,7 +39,7 @@ const (
 		WHERE login = $1
 	`
 
-// Order queries
+	// Order queries
 	queryGetOrder = `
 		SELECT number, login, uploaded_at, status, accrual
 		FROM orders

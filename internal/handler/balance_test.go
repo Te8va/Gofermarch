@@ -174,11 +174,11 @@ func TestBalanceHandler_WithdrawBalance(t *testing.T) {
 func TestBalanceHandler_GetUserWithdrawals(t *testing.T) {
 	now := time.Now()
 	tests := []struct {
-		name         string
-		login        string
-		mockResult   []domain.Withdrawal
-		mockError    error
-		wantStatus   int
+		name       string
+		login      string
+		mockResult []domain.Withdrawal
+		mockError  error
+		wantStatus int
 	}{
 		{
 			name:       "unauthorized",

@@ -76,32 +76,35 @@ func (s *OrderService) accrualWorker(ctx context.Context, jobs <-chan accrualJob
 			results <- accrualResult{Number: job.OrderNumber, Err: err}
 			continue
 		}
-		defer resp.Body.Close()
 
-		if resp.StatusCode == http.StatusTooManyRequests {
-			results <- accrualResult{Number: job.OrderNumber, Err: appErrors.ErrTooManyRequests}
-			continue
-		}
+		func() {
+			defer resp.Body.Close()
 
-		if resp.StatusCode != http.StatusOK {
-			results <- accrualResult{Number: job.OrderNumber, Err: fmt.Errorf("unexpected status: %d", resp.StatusCode)}
-			continue
-		}
+			if resp.StatusCode == http.StatusTooManyRequests {
+				results <- accrualResult{Number: job.OrderNumber, Err: appErrors.ErrTooManyRequests}
+				return
+			}
 
-		var ext struct {
-			Order   string  `json:"order"`
-			Status  string  `json:"status"`
-			Accrual float64 `json:"accrual"`
-		}
-		if err := json.NewDecoder(resp.Body).Decode(&ext); err != nil {
-			results <- accrualResult{Number: job.OrderNumber, Err: err}
-			continue
-		}
+			if resp.StatusCode != http.StatusOK {
+				results <- accrualResult{Number: job.OrderNumber, Err: fmt.Errorf("unexpected status: %d", resp.StatusCode)}
+				return
+			}
 
-		results <- accrualResult{
-			Number:  ext.Order,
-			Status:  ext.Status,
-			Accrual: ext.Accrual,
-		}
+			var ext struct {
+				Order   string  `json:"order"`
+				Status  string  `json:"status"`
+				Accrual float64 `json:"accrual"`
+			}
+			if err := json.NewDecoder(resp.Body).Decode(&ext); err != nil {
+				results <- accrualResult{Number: job.OrderNumber, Err: err}
+				return
+			}
+
+			results <- accrualResult{
+				Number:  ext.Order,
+				Status:  ext.Status,
+				Accrual: ext.Accrual,
+			}
+		}()
 	}
 }
