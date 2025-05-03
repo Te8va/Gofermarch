@@ -76,7 +76,7 @@ func TestBalanceHandler_GetUserBalance(t *testing.T) {
 			res := w.Result()
 			defer res.Body.Close()
 
-			require.Equal(t, tt.wantStatus, w.Result().StatusCode)
+			require.Equal(t, tt.wantStatus, res.StatusCode)
 		})
 	}
 }
@@ -166,7 +166,7 @@ func TestBalanceHandler_WithdrawBalance(t *testing.T) {
 			res := w.Result()
 			defer res.Body.Close()
 
-			require.Equal(t, tt.wantStatus, w.Result().StatusCode)
+			require.Equal(t, tt.wantStatus, res.StatusCode)
 		})
 	}
 }
@@ -227,7 +227,7 @@ func TestBalanceHandler_GetUserWithdrawals(t *testing.T) {
 			res := w.Result()
 			defer res.Body.Close()
 
-			require.Equal(t, tt.wantStatus, w.Result().StatusCode)
+			require.Equal(t, tt.wantStatus, res.StatusCode)
 		})
 	}
 }

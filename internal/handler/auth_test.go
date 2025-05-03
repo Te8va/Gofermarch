@@ -88,7 +88,7 @@ func TestAuthorizationHandler_RegisterHandler(t *testing.T) {
 			res := w.Result()
 			defer res.Body.Close()
 
-			require.Equal(t, tt.wantStatus, w.Result().StatusCode)
+			require.Equal(t, tt.wantStatus, res.StatusCode)
 
 			if tt.wantStatus == http.StatusOK {
 				require.Equal(t, "Bearer "+tt.mockReturn, w.Header().Get("Authorization"))
@@ -174,7 +174,7 @@ func TestAuthorizationHandler_LoginHandler(t *testing.T) {
 			res := w.Result()
 			defer res.Body.Close()
 
-			require.Equal(t, tt.wantStatus, w.Result().StatusCode)
+			require.Equal(t, tt.wantStatus, res.StatusCode)
 
 			if tt.wantStatus == http.StatusOK {
 				require.Equal(t, "Bearer "+tt.mockReturn, w.Header().Get("Authorization"))
