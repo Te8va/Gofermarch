@@ -85,6 +85,9 @@ func TestAuthorizationHandler_RegisterHandler(t *testing.T) {
 			w := httptest.NewRecorder()
 
 			h.RegisterHandler(w, req)
+			res := w.Result()
+			defer res.Body.Close()
+
 			require.Equal(t, tt.wantStatus, w.Result().StatusCode)
 
 			if tt.wantStatus == http.StatusOK {
@@ -168,6 +171,9 @@ func TestAuthorizationHandler_LoginHandler(t *testing.T) {
 			w := httptest.NewRecorder()
 
 			h.LoginHandler(w, req)
+			res := w.Result()
+			defer res.Body.Close()
+
 			require.Equal(t, tt.wantStatus, w.Result().StatusCode)
 
 			if tt.wantStatus == http.StatusOK {

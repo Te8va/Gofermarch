@@ -73,6 +73,9 @@ func TestBalanceHandler_GetUserBalance(t *testing.T) {
 			w := httptest.NewRecorder()
 
 			h.GetUserBalance(w, req)
+			res := w.Result()
+			defer res.Body.Close()
+
 			require.Equal(t, tt.wantStatus, w.Result().StatusCode)
 		})
 	}
@@ -160,6 +163,9 @@ func TestBalanceHandler_WithdrawBalance(t *testing.T) {
 			w := httptest.NewRecorder()
 
 			h.WithdrawBalance(w, req)
+			res := w.Result()
+			defer res.Body.Close()
+
 			require.Equal(t, tt.wantStatus, w.Result().StatusCode)
 		})
 	}
@@ -218,6 +224,9 @@ func TestBalanceHandler_GetUserWithdrawals(t *testing.T) {
 			w := httptest.NewRecorder()
 
 			h.GetUserWithdrawals(w, req)
+			res := w.Result()
+			defer res.Body.Close()
+
 			require.Equal(t, tt.wantStatus, w.Result().StatusCode)
 		})
 	}
