@@ -6,23 +6,31 @@ import (
 	"fmt"
 	"time"
 
+	"golang.org/x/crypto/bcrypt"
+
 	"github.com/Te8va/Gofermarch/internal/domain"
 	appErrors "github.com/Te8va/Gofermarch/internal/errors"
 	"github.com/Te8va/Gofermarch/pkg/jwt"
-	"golang.org/x/crypto/bcrypt"
 )
 
+//go:generate mockgen -source=authorization.go -destination=mocks/mock_authorization.go -package=mocks
+
+type AuthorizationServ interface {
+	CreateUser(ctx context.Context, user domain.User) error
+	GetUserByLogin(ctx context.Context, login string) (*domain.User, error)
+}
+
 type Authorization struct {
-	repo   domain.AuthorizationRepository
+	srv    AuthorizationServ
 	JWTKey string
 }
 
-func NewAuthorization(repo domain.AuthorizationRepository, jwtKey string) *Authorization {
-	return &Authorization{repo: repo, JWTKey: jwtKey}
+func NewAuthorization(srv AuthorizationServ, jwtKey string) *Authorization {
+	return &Authorization{srv: srv, JWTKey: jwtKey}
 }
 
 func (s *Authorization) Register(ctx context.Context, login, password string) (string, error) {
-	_, err := s.repo.GetUserByLogin(ctx, login)
+	_, err := s.srv.GetUserByLogin(ctx, login)
 	if err == nil {
 		return "", appErrors.ErrAlreadyRegistered
 	}
@@ -46,7 +54,7 @@ func (s *Authorization) Register(ctx context.Context, login, password string) (s
 		Token:    tokenStr,
 	}
 
-	if err := s.repo.CreateUser(ctx, user); err != nil {
+	if err := s.srv.CreateUser(ctx, user); err != nil {
 		return "", fmt.Errorf("service.Register: %w", err)
 	}
 
@@ -54,7 +62,7 @@ func (s *Authorization) Register(ctx context.Context, login, password string) (s
 }
 
 func (s *Authorization) Authenticate(ctx context.Context, login, password string) (string, error) {
-	user, err := s.repo.GetUserByLogin(ctx, login)
+	user, err := s.srv.GetUserByLogin(ctx, login)
 	if err != nil {
 		return "", err
 	}

@@ -5,13 +5,14 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/Te8va/Gofermarch/internal/domain"
-	appErrors "github.com/Te8va/Gofermarch/internal/errors"
-	"github.com/Te8va/Gofermarch/pkg/logger"
 	"github.com/jackc/pgerrcode"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgconn"
 	"github.com/jackc/pgx/v5/pgxpool"
+
+	"github.com/Te8va/Gofermarch/internal/domain"
+	appErrors "github.com/Te8va/Gofermarch/internal/errors"
+	"github.com/Te8va/Gofermarch/pkg/logger"
 )
 
 type AuthorizationRepository struct {
@@ -33,7 +34,7 @@ func (r *AuthorizationRepository) CreateUser(ctx context.Context, user domain.Us
 		}
 	}()
 
-	_, err = tx.Exec(ctx, "INSERT INTO users(login, password, token) VALUES($1, $2, $3)", user.Login, user.Password, user.Token)
+	_, err = tx.Exec(ctx, queryInsertUser, user.Login, user.Password, user.Token)
 	if err != nil {
 		var pgErr *pgconn.PgError
 		if errors.As(err, &pgErr) && pgErr.Code == pgerrcode.UniqueViolation {
@@ -52,7 +53,7 @@ func (r *AuthorizationRepository) CreateUser(ctx context.Context, user domain.Us
 func (r *AuthorizationRepository) GetUserByLogin(ctx context.Context, login string) (*domain.User, error) {
 	var user domain.User
 
-	err := r.pool.QueryRow(ctx, "SELECT login, password, token FROM users WHERE login = $1", login).
+	err := r.pool.QueryRow(ctx, queryGetUserByLogin, login).
 		Scan(&user.Login, &user.Password, &user.Token)
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {

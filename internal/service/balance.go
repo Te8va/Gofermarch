@@ -8,26 +8,28 @@ import (
 	appErrors "github.com/Te8va/Gofermarch/internal/errors"
 )
 
-type BalanceRepository interface {
+//go:generate mockgen -source=balance.go -destination=mocks/mock_balance.go -package=mocks
+
+type BalanceServ interface {
 	GetBalance(ctx context.Context, login string) (domain.Balance, error)
 	SaveWithdrawal(ctx context.Context, w domain.Withdrawal) error
 	GetWithdrawalsByUser(ctx context.Context, login string) ([]domain.Withdrawal, error)
 }
 
 type BalanceService struct {
-	repo BalanceRepository
+	srv BalanceServ
 }
 
-func NewBalanceService(repo BalanceRepository) *BalanceService {
-	return &BalanceService{repo: repo}
+func NewBalanceService(srv BalanceServ) *BalanceService {
+	return &BalanceService{srv: srv}
 }
 
 func (s *BalanceService) GetUserBalance(ctx context.Context, login string) (domain.Balance, error) {
-	return s.repo.GetBalance(ctx, login)
+	return s.srv.GetBalance(ctx, login)
 }
 
 func (s *BalanceService) WithdrawBalance(ctx context.Context, login, order string, sum float64) error {
-	balance, err := s.repo.GetBalance(ctx, login)
+	balance, err := s.srv.GetBalance(ctx, login)
 	if err != nil {
 		return err
 	}
@@ -36,7 +38,7 @@ func (s *BalanceService) WithdrawBalance(ctx context.Context, login, order strin
 		return appErrors.ErrInsufficientFunds
 	}
 
-	return s.repo.SaveWithdrawal(ctx, domain.Withdrawal{
+	return s.srv.SaveWithdrawal(ctx, domain.Withdrawal{
 		Login:       login,
 		Order:       order,
 		Sum:         sum,
@@ -45,5 +47,5 @@ func (s *BalanceService) WithdrawBalance(ctx context.Context, login, order strin
 }
 
 func (s *BalanceService) GetUserWithdrawals(ctx context.Context, login string) ([]domain.Withdrawal, error) {
-	return s.repo.GetWithdrawalsByUser(ctx, login)
+	return s.srv.GetWithdrawalsByUser(ctx, login)
 }

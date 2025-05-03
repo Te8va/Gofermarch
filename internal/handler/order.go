@@ -12,6 +12,8 @@ import (
 	"github.com/Te8va/Gofermarch/internal/utils"
 )
 
+//go:generate mockgen -source=order.go -destination=mocks/mock_order.go -package=mocks
+
 type OrderProcessor interface {
 	ProcessOrder(ctx context.Context, number, login string) (domain.OrderStatus, error)
 	GetOrdersByUser(ctx context.Context, login string) ([]domain.Order, error)

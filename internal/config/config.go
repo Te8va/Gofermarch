@@ -2,9 +2,12 @@ package config
 
 import (
 	"flag"
-	"log"
+	"log/slog"
 
 	"github.com/caarlos0/env/v6"
+	"github.com/joho/godotenv"
+
+	"github.com/Te8va/Gofermarch/pkg/logger"
 )
 
 type Config struct {
@@ -16,22 +19,26 @@ type Config struct {
 	MigrationsPath       string `env:"MIGRATIONS_PATH"       envDefault:"migrations"`
 	LogFilePath          string `env:"LOG_FILE_PATH"         envDefault:"logfile.log"`
 	JWTKey               string `env:"JWT_KEY"               envDefault:"supermegasecret"`
-	DatabaseURI          string `env:"POSTGRES_CONN"         envDefault:"postgres://gophermart:gophermart@localhost:5432/gophermart?sslmode=disable"`
+	DatabaseURI          string `env:"DATABASE_URI"         envDefault:"postgres://gophermart:gophermart@localhost:5432/gophermart?sslmode=disable"`
 	AccrualSystemAddress string `env:"ACCRUAL_SYSTEM_ADDRESS" envDefault:"http://localhost:8081"`
 }
 
 func NewConfig() *Config {
-	cfg := Config{}
-
-	if err := env.Parse(&cfg); err != nil {
-		log.Fatalf("Error parsing environment variables: %v", err)
+	err := godotenv.Load()
+	if err != nil {
+		slog.Warn("Error loading .env file")
 	}
 
-	runAddrFlag := flag.String("a", "", "Address and port to run the service")
-	dbURIFlag := flag.String("d", "", "Database connection URI")
-	accrualAddrFlag := flag.String("r", "", "Accrual system address")
+	cfg := Config{}
 
+	runAddrFlag := flag.String("a", "", "Service address")
+	dbURIFlag := flag.String("d", "", "Database DSN")
+	accrualAddrFlag := flag.String("r", "", "Accrual system address")
 	flag.Parse()
+
+	if err := env.Parse(&cfg); err != nil {
+		logger.Logger().Error("Failed to parse environment variables", "error", err)
+	}
 
 	if *runAddrFlag != "" {
 		cfg.RunAddress = *runAddrFlag

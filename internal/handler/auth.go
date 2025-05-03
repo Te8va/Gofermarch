@@ -1,22 +1,31 @@
 package handler
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"net/http"
 
+	"go.uber.org/zap"
+
 	"github.com/Te8va/Gofermarch/internal/domain"
 	appErrors "github.com/Te8va/Gofermarch/internal/errors"
 	"github.com/Te8va/Gofermarch/pkg/logger"
-	"go.uber.org/zap"
 )
 
-type AuthorizationHandler struct {
-	srv domain.AuthorizationService
+//go:generate mockgen -source=auth.go -destination=mocks/mock_auth.go -package=mocks
+
+type Authorization interface {
+	Register(ctx context.Context, login, password string) (string, error)
+	Authenticate(ctx context.Context, login, password string) (string, error)
 }
 
-func NewAuthorizationHandler(srv domain.AuthorizationService) *AuthorizationHandler {
-	return &AuthorizationHandler{srv: srv}
+type AuthorizationHandler struct {
+	aut Authorization
+}
+
+func NewAuthorizationHandler(aut Authorization) *AuthorizationHandler {
+	return &AuthorizationHandler{aut: aut}
 }
 
 func (h *AuthorizationHandler) RegisterHandler(w http.ResponseWriter, r *http.Request) {
@@ -32,7 +41,7 @@ func (h *AuthorizationHandler) RegisterHandler(w http.ResponseWriter, r *http.Re
 		return
 	}
 
-	token, err := h.srv.Register(r.Context(), authData.Login, authData.Password)
+	token, err := h.aut.Register(r.Context(), authData.Login, authData.Password)
 	if err != nil {
 		switch {
 		case errors.Is(err, appErrors.ErrAlreadyRegistered):
@@ -44,14 +53,7 @@ func (h *AuthorizationHandler) RegisterHandler(w http.ResponseWriter, r *http.Re
 		return
 	}
 
-	http.SetCookie(w, &http.Cookie{
-		Name:     "auth_token",
-		Value:    token,
-		Path:     "/",
-		HttpOnly: true,
-		Secure:   true,
-	})
-
+	h.setAuthToken(w, token)
 	w.WriteHeader(http.StatusOK)
 }
 
@@ -63,7 +65,7 @@ func (h *AuthorizationHandler) LoginHandler(w http.ResponseWriter, r *http.Reque
 		return
 	}
 
-	token, err := h.srv.Authenticate(r.Context(), authData.Login, authData.Password)
+	token, err := h.aut.Authenticate(r.Context(), authData.Login, authData.Password)
 	if err != nil {
 		switch {
 		case errors.Is(err, appErrors.ErrWrongPassword),
@@ -76,6 +78,11 @@ func (h *AuthorizationHandler) LoginHandler(w http.ResponseWriter, r *http.Reque
 		return
 	}
 
+	h.setAuthToken(w, token)
+	w.WriteHeader(http.StatusOK)
+}
+
+func (h *AuthorizationHandler) setAuthToken(w http.ResponseWriter, token string) {
 	http.SetCookie(w, &http.Cookie{
 		Name:     "auth_token",
 		Value:    token,
@@ -84,5 +91,5 @@ func (h *AuthorizationHandler) LoginHandler(w http.ResponseWriter, r *http.Reque
 		Secure:   true,
 	})
 
-	w.WriteHeader(http.StatusOK)
+	w.Header().Set("Authorization", "Bearer "+token)
 }
