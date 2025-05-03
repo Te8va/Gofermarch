@@ -91,7 +91,7 @@ func TestAuthorizationHandler_RegisterHandler(t *testing.T) {
 			require.Equal(t, tt.wantStatus, res.StatusCode)
 
 			if tt.wantStatus == http.StatusOK {
-				require.Equal(t, "Bearer "+tt.mockReturn, w.Header().Get("Authorization"))
+				require.Equal(t, "Bearer "+tt.mockReturn, res.Header.Get("Authorization"))
 				cookie := w.Result().Cookies()[0]
 				require.NotEmpty(t, cookie)
 				require.Equal(t, "auth_token", cookie.Name)
@@ -178,7 +178,7 @@ func TestAuthorizationHandler_LoginHandler(t *testing.T) {
 			require.Equal(t, tt.wantStatus, res.StatusCode)
 
 			if tt.wantStatus == http.StatusOK {
-				require.Equal(t, "Bearer "+tt.mockReturn, w.Header().Get("Authorization"))
+				require.Equal(t, "Bearer "+tt.mockReturn, res.Header.Get("Authorization"))
 				cookie := w.Result().Cookies()[0]
 				require.NotEmpty(t, cookie)
 				require.Equal(t, "auth_token", cookie.Name)
