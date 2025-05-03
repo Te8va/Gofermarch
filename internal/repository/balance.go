@@ -18,18 +18,12 @@ func NewFinanceRepository(db *pgxpool.Pool) *BalanceRepository {
 
 func (r *BalanceRepository) GetBalance(ctx context.Context, login string) (domain.Balance, error) {
 	var accrued, withdrawn float64
-	err := r.db.QueryRow(ctx, `
-		SELECT COALESCE(SUM(accrual), 0)
-		FROM orders
-		WHERE login = $1`, login).Scan(&accrued)
+	err := r.db.QueryRow(ctx,queryGetAccrued, login).Scan(&accrued)
 	if err != nil {
 		return domain.Balance{}, err
 	}
 
-	err = r.db.QueryRow(ctx, `
-		SELECT COALESCE(SUM(withdrawn), 0)
-		FROM withdrawals
-		WHERE login = $1`, login).Scan(&withdrawn)
+	err = r.db.QueryRow(ctx,queryGetWithdrawn, login).Scan(&withdrawn)
 	if err != nil {
 		return domain.Balance{}, err
 	}
@@ -41,20 +35,12 @@ func (r *BalanceRepository) GetBalance(ctx context.Context, login string) (domai
 }
 
 func (r *BalanceRepository) SaveWithdrawal(ctx context.Context, w domain.Withdrawal) error {
-	_, err := r.db.Exec(ctx,
-		`INSERT INTO withdrawals (login, order_number, withdrawn, processed_at)
-		 VALUES ($1, $2, $3, $4)`,
-		w.Login, w.Order, w.Sum, w.ProcessedAt)
+	_, err := r.db.Exec(ctx,queryInsertWithdrawal, w.Login, w.Order, w.Sum, w.ProcessedAt)
 	return err
 }
 
 func (r *BalanceRepository) GetWithdrawalsByUser(ctx context.Context, login string) ([]domain.Withdrawal, error) {
-	rows, err := r.db.Query(ctx,
-		`SELECT order_number, withdrawn, processed_at
-		 FROM withdrawals
-		 WHERE login = $1
-		 ORDER BY processed_at DESC`,
-		login)
+	rows, err := r.db.Query(ctx, queryGetWithdrawalsByUser,login)
 	if err != nil {
 		return nil, err
 	}

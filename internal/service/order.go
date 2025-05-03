@@ -2,12 +2,7 @@ package service
 
 import (
 	"context"
-	"encoding/json"
 	"errors"
-	"fmt"
-	"log"
-	"net/http"
-	"strings"
 	"time"
 
 	"github.com/Te8va/Gofermarch/internal/domain"
@@ -54,52 +49,9 @@ func (s *OrderService) ProcessOrder(ctx context.Context, number, login string) (
 		return domain.StatusInternal, err
 	}
 
-	go func() {
-		if err := s.updateOrderFromAccrualSystem(context.Background(), number); err != nil {
-			log.Printf("updateOrderFromAccrualSystem error: %v", err)
-		}
-	}()
+	go s.StartAccrualProcessing(context.Background(), []string{number})
 
 	return domain.StatusNew, nil
-}
-
-func (s *OrderService) updateOrderFromAccrualSystem(ctx context.Context, number string) error {
-	url := fmt.Sprintf("%s/api/orders/%s", strings.TrimRight(s.accrualSystemURL, "/"), number)
-	resp, err := http.Get(url)
-	if err != nil {
-		return err
-	}
-	defer resp.Body.Close()
-
-	switch resp.StatusCode {
-	case http.StatusOK:
-		var ext struct {
-			Order   string  `json:"order"`
-			Status  string  `json:"status"`
-			Accrual float64 `json:"accrual"`
-		}
-		if err := json.NewDecoder(resp.Body).Decode(&ext); err != nil {
-			return err
-		}
-
-		var internalStatus string
-		switch ext.Status {
-		case "REGISTERED", "PROCESSING":
-			internalStatus = "PROCESSING"
-		case "INVALID":
-			internalStatus = "INVALID"
-		case "PROCESSED":
-			internalStatus = "PROCESSED"
-		default:
-			internalStatus = "NEW"
-		}
-
-		return s.srv.UpdateOrder(ctx, number, internalStatus, ext.Accrual)
-
-	case http.StatusTooManyRequests:
-		return appErrors.ErrTooManyRequests
-	}
-	return nil
 }
 
 func (s *OrderService) GetOrdersByUser(ctx context.Context, login string) ([]domain.Order, error) {

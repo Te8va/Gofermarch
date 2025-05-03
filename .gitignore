@@ -22,4 +22,11 @@ vendor/
 .idea
 .vscode
 
+# .env file
 .env
+
+# Temp log file
+abc_tmp.txt
+
+# Log files
+*.log

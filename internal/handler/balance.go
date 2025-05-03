@@ -12,6 +12,8 @@ import (
 	"github.com/Te8va/Gofermarch/internal/utils"
 )
 
+//go:generate mockgen -source=balance.go -destination=mocks/mock_authorization.go -package=mocks
+
 type Balance interface {
 	GetUserBalance(ctx context.Context, login string) (domain.Balance, error)
 	WithdrawBalance(ctx context.Context, login, order string, sum float64) error

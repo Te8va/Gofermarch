@@ -13,6 +13,8 @@ import (
 	"github.com/Te8va/Gofermarch/pkg/logger"
 )
 
+//go:generate mockgen -source=auth.go -destination=mocks/mock_auth.go -package=mocks
+
 type Authorization interface {
 	Register(ctx context.Context, login, password string) (string, error)
 	Authenticate(ctx context.Context, login, password string) (string, error)
